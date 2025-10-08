@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dw7olg8uarsl4"]
 
-[ext_resource type="Script" uid="uid://bcrbr1s3560t3" path="res://FpsCamera.cs" id="1_rth3d"]
+[ext_resource type="Script" uid="uid://dsn65yjmoqknb" path="res://FpsCamera.cs" id="1_rth3d"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_e2uyg"]
 
@@ -17,4 +17,5 @@ shape = SubResource("CapsuleShape3D_ql0t6")
 
 [node name="Pivot" type="Node3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="Pivot"]
+[node name="PlayerCamera" type="Camera3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
