@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhka4erttb6np"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7ppfe"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_2vand"]
+sky_material = SubResource("ProceduralSkyMaterial_7ppfe")
+
+[sub_resource type="Environment" id="Environment_jgpco"]
+background_mode = 2
+sky = SubResource("Sky_2vand")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Node3D" type="Node3D"]
+
+[node name="GodotGraphics" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="GodotGraphics"]
+environment = SubResource("Environment_jgpco")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="GodotGraphics"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+light_color = Color(1, 0.933333, 0.866667, 1)
+light_energy = 0.75
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="."]
+size = Vector3(16, 1, 16)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1.5)
+size = Vector3(4, 2, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.5, 1.5, 1)
+size = Vector3(4, 2, 1)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D/CSGBox3D2"]
+transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, -1, -4.37114e-08, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 0, 0, 0)
+operation = 2
+radius = 0.7
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.2, 1, 1)
+size = Vector3(4, 1, 1)
