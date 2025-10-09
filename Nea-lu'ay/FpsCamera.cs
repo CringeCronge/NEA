@@ -16,6 +16,8 @@ public partial class FpsCamera : CharacterBody3D
 	public float SprintMultiplier = 1.4f;
 	private bool _sprinting = false;
 	
+	private bool hasController = false;
+	
 	private Node3D _pivot;
 	private Camera3D _playerCamera;
 	
@@ -50,15 +52,12 @@ public partial class FpsCamera : CharacterBody3D
 		}
 		
 		//Joystick:
-		if(@event is InputEventJoypadMotion j)
+		if(!hasController)
 		{
-			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
-			_pivot.RotateY(-inputDir.X * CameraSensitivity);
-			_playerCamera.RotateX(-inputDir.Y * CameraSensitivity);
-			
-			Vector3 cameraRotation = _playerCamera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
-			_playerCamera.Rotation = cameraRotation;
+			if(@event is InputEventJoypadMotion || @event is InputEventJoypadButton)
+			{
+				hasController = true;
+			}
 		}
 		
 		if(Input.IsActionJustPressed("sprint"))
@@ -75,6 +74,20 @@ public partial class FpsCamera : CharacterBody3D
 					t.TweenProperty(_playerCamera, "fov", 90, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
 					break;
 			}
+		}
+	}
+
+	public override void _Process(double delta)
+	{
+		if(hasController)
+		{
+			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
+			_pivot.RotateY(-inputDir.X * 0.01f);
+			_playerCamera.RotateX(-inputDir.Y * 0.01f);
+			
+			Vector3 cameraRotation = _playerCamera.Rotation;
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
+			_playerCamera.Rotation = cameraRotation;
 		}
 	}
 

@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhka4erttb6np"]
+[gd_scene load_steps=6 format=3 uid="uid://dhka4erttb6np"]
 
 [ext_resource type="PackedScene" uid="uid://dw7olg8uarsl4" path="res://fps_camera.tscn" id="1_2vand"]
 [ext_resource type="PackedScene" uid="uid://doljnpg2irlcj" path="res://TripTest.tscn" id="2_jgpco"]
-[ext_resource type="Script" uid="uid://clakqw821j17g" path="res://HazardManager.cs" id="2_uc0gf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7ppfe"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -63,8 +62,5 @@ size = Vector3(1, 1, 1.5)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 3.5)
 floor_max_angle = 1.0472
 
-[node name="HazardManager" type="Node" parent="."]
-script = ExtResource("2_uc0gf")
-
-[node name="test" parent="HazardManager" instance=ExtResource("2_jgpco")]
+[node name="test" parent="." instance=ExtResource("2_jgpco")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.8, 0.5, 4.8)
