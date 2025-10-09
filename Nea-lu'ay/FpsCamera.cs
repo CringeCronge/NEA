@@ -93,13 +93,34 @@ public partial class FpsCamera : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		/*Tripping/Collisions*/
+		/*for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			KinematicCollision3D collision = GetSlideCollision(i);
+			if (collision.GetCollider() is Mob mob)
+			{
+				if (Vector3.Up.Dot(collision.GetNormal()) > 0.1f)
+				{
+					GD.Print("Trip!"); break;
+				}
+			}
+		}*/
+		
+		/*
+		var collision = MoveAndCollide(Velocity * (float)delta);
+		if (collision != null)
+		{
+			GD.Print("I collided with ", ((Node)collision.GetCollider()).Name);
+		}
+		*/
+		
 		/*movement*/
 		Vector3 velocity = Velocity;
 
 		// Add the gravity.
 		if (!IsOnFloor())
 		{
-			velocity += GetGravity() * (float)delta * 1.3f;// fine tune gravity.
+			velocity += GetGravity() * (float)delta * 1.0f;// fine tune gravity.
 		}
 
 		if (Input.IsActionJustPressed("jump") && IsOnFloor())
@@ -123,5 +144,13 @@ public partial class FpsCamera : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			var collision = GetSlideCollision(i);
+			if(((Node)collision.GetCollider()).IsInGroup("TripHazard"))
+			{
+				GD.Print("Trip?");
+			}
+		}
 	}
 }

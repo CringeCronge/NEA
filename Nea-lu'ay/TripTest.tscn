@@ -9,7 +9,7 @@ radial_segments = 16
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6yrm7"]
 albedo_color = Color(1, 0.372549, 0.121569, 1)
 
-[node name="TripHazard" type="CSGMesh3D"]
+[node name="TripHazard" type="CSGMesh3D" groups=["TripHazard"]]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 use_collision = true
 mesh = SubResource("CylinderMesh_v1djm")
