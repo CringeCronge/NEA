@@ -37,15 +37,20 @@ public partial class FpsCamera : CharacterBody3D
 			Vector3 cameraRotation = _playerCamera.Rotation;
 			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
 			_playerCamera.Rotation = cameraRotation;
+			if(!mouseCaptured)
+			{
+				GD.Print("Trying to capture");
+				if(Input.IsActionPressed("sprint"))
+				{
+					Input.MouseMode = Input.MouseModeEnum.Captured; mouseCaptured = true; GD.Print("Recaptured");
+				}
+			}
 		}
 		else if(@event is InputEventKey k && k.Keycode == Key.Escape)
 		{
-			switch(mouseCaptured)
-			{
-				case true: Input.MouseMode = Input.MouseModeEnum.Visible; mouseCaptured = false; GD.Print("Uncaptured"); break;
-				case false: Input.MouseMode = Input.MouseModeEnum.Captured; mouseCaptured = true; GD.Print("Recaptured"); break;
-			}
-			//change to just pressed, use ui_cancel?
+			Input.MouseMode = Input.MouseModeEnum.Visible;
+			mouseCaptured = false;
+			GD.Print("Uncaptured");
 		}
 		
 		//Joystick:
