@@ -80,6 +80,7 @@ public partial class FpsCamera : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		/*movement*/
 		Vector3 velocity = Velocity;
 
 		// Add the gravity.
