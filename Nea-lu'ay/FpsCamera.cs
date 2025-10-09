@@ -7,9 +7,11 @@ public partial class FpsCamera : CharacterBody3D
 	public float Speed = 5.0f;
 	[Export]
 	public float JumpVelocity = 4.5f;
+	
 	[Export]
 	public float CameraSensitivity = 0.006f;
 	private bool mouseCaptured = true;
+	
 	[Export]
 	public float SprintMultiplier = 1.4f;
 	private bool _sprinting = false;
@@ -22,7 +24,7 @@ public partial class FpsCamera : CharacterBody3D
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		_pivot = GetNode<Node3D>("Pivot");
 		_playerCamera = GetNode<Camera3D>("Pivot/PlayerCamera");
-		_playerCamera.Fov = 75;
+		_playerCamera.Fov = 85;
 	}
 	
 	public override void _Input(InputEvent @event)
@@ -46,6 +48,8 @@ public partial class FpsCamera : CharacterBody3D
 			Input.MouseMode = Input.MouseModeEnum.Captured;
 			mouseCaptured = true;
 		}
+		
+		//Joystick:
 		
 		if(Input.IsActionJustPressed("sprint"))
 		{
