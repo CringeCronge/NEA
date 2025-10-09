@@ -40,16 +40,25 @@ public partial class FpsCamera : CharacterBody3D
 		}
 		else if(@event is InputEventKey k && k.Keycode == Key.Escape)
 		{
-			Input.MouseMode = Input.MouseModeEnum.Visible;
-			mouseCaptured = false;
-		}
-		else if(mouseCaptured = false && @event is InputEventMouseButton)
-		{
-			Input.MouseMode = Input.MouseModeEnum.Captured;
-			mouseCaptured = true;
+			switch(mouseCaptured)
+			{
+				case true: Input.MouseMode = Input.MouseModeEnum.Visible; mouseCaptured = false; GD.Print("Uncaptured"); break;
+				case false: Input.MouseMode = Input.MouseModeEnum.Captured; mouseCaptured = true; GD.Print("Recaptured"); break;
+			}
+			//change to just pressed, use ui_cancel?
 		}
 		
 		//Joystick:
+		if(@event is InputEventJoypadMotion j)
+		{
+			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
+			_pivot.RotateY(-inputDir.X * CameraSensitivity);
+			_playerCamera.RotateX(-inputDir.Y * CameraSensitivity);
+			
+			Vector3 cameraRotation = _playerCamera.Rotation;
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
+			_playerCamera.Rotation = cameraRotation;
+		}
 		
 		if(Input.IsActionJustPressed("sprint"))
 		{
