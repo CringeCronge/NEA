@@ -21,9 +21,6 @@ public partial class FpsCamera : CharacterBody3D
 	private Node3D _pivot;
 	private Camera3D _playerCamera;
 	
-	[Signal]
-	public delegate void TripEventHandler();
-	
 	public override void _Ready()
 	{
 		Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -32,6 +29,7 @@ public partial class FpsCamera : CharacterBody3D
 		_playerCamera.Fov = 85;
 	}
 	
+	//Mouse input and sprinting.
 	public override void _Input(InputEvent @event)
 	{
 		if(@event is InputEventMouseMotion m)
@@ -80,6 +78,7 @@ public partial class FpsCamera : CharacterBody3D
 		}
 	}
 
+//On every frame update, currently right joystick movement.
 	public override void _Process(double delta)
 	{
 		if(hasController)
@@ -93,7 +92,13 @@ public partial class FpsCamera : CharacterBody3D
 			_playerCamera.Rotation = cameraRotation;
 		}
 	}
-
+	
+	public void Trip()
+	{
+		GD.Print("Trip!");
+	}
+	
+	//every physics frame
 	public override void _PhysicsProcess(double delta)
 	{
 		/*movement*/
@@ -102,7 +107,7 @@ public partial class FpsCamera : CharacterBody3D
 		// Add the gravity.
 		if (!IsOnFloor())
 		{
-			velocity += GetGravity() * (float)delta * 1.0f;// fine tune gravity.
+			velocity += GetGravity() * (float)delta * 1.3f;// fine tune gravity.
 		}
 
 		if (Input.IsActionJustPressed("jump") && IsOnFloor())
@@ -112,7 +117,8 @@ public partial class FpsCamera : CharacterBody3D
 
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (_pivot.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-		float speed = _sprinting ? Speed * SprintMultiplier: Speed;
+		//float speed = _sprinting ? Speed * SprintMultiplier: Speed;
+		float speed = !IsOnFloor() ? 0.5f * Speed: _sprinting ? Speed * SprintMultiplier: Speed;//too punishing if sprinting...
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * speed;
@@ -133,13 +139,20 @@ public partial class FpsCamera : CharacterBody3D
 			var collision = GetSlideCollision(i);
 			if(((Node)collision.GetCollider()).IsInGroup("TripHazard"))
 			{
-				//(Node)collison.TripChance(_sprinting);
+				if(_sprinting)
+				{
+					Trip();
+				}
+				else if(Velocity > new Vector3(0,0,0))
+				{
+					float tripChance = GD.Randf();
+					if(tripChance > 0.95)
+					{
+						GD.Print(tripChance+","+Velocity);
+						Trip();
+					}
+				}
 			}
 		}
 	}
-	
-	/*public void Trip()
-	{
-		GD.Print("Trip!");
-	}*/
 }
