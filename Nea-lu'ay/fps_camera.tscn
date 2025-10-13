@@ -9,11 +9,8 @@
 [node name="fpsCamera" type="CharacterBody3D"]
 script = ExtResource("1_rth3d")
 
-[node name="TempTripPivot" type="Node3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TempTripPivot"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_e2uyg")
-skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_ql0t6")

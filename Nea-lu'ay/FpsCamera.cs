@@ -19,14 +19,14 @@ public partial class FpsCamera : CharacterBody3D
 	
 	private bool hasController = false;
 	
-	private Node3D _pivot;
+	private Node3D _cameraPivot;
 	private Camera3D _playerCamera;
 	private CollisionShape3D _player;
 	
 	public override void _Ready()
 	{
 		Input.MouseMode = Input.MouseModeEnum.Captured;
-		_pivot = GetNode<Node3D>("Pivot");
+		_cameraPivot = GetNode<Node3D>("Pivot");
 		_playerCamera = GetNode<Camera3D>("Pivot/PlayerCamera");
 		_player = GetNode<CollisionShape3D>("CollisionShape3D");
 		_playerCamera.Fov = 85;
@@ -37,7 +37,7 @@ public partial class FpsCamera : CharacterBody3D
 	{
 		if(@event is InputEventMouseMotion m)
 		{
-			_pivot.RotateY(-m.Relative.X * CameraSensitivity);
+			_cameraPivot.RotateY(-m.Relative.X * CameraSensitivity);
 			_playerCamera.RotateX(-m.Relative.Y * CameraSensitivity);
 			
 			Vector3 cameraRotation = _playerCamera.Rotation;
@@ -87,8 +87,8 @@ public partial class FpsCamera : CharacterBody3D
 		if(hasController)
 		{
 			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
-			_pivot.RotateY(-inputDir.X * 0.01f);
-			_playerCamera.RotateX(-inputDir.Y * 0.01f);
+			_cameraPivot.RotateY(-inputDir.X * 0.01f);
+			/*_playerCamera.*/RotateX(-inputDir.Y * 0.01f);
 			
 			Vector3 cameraRotation = _playerCamera.Rotation;
 			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
@@ -101,10 +101,14 @@ public partial class FpsCamera : CharacterBody3D
 		GD.Print("Trip!");
 		_tripping = true;
 		_sprinting = false;
+		Velocity = new Vector3(0,3,0);
+		
 		/*Vector3 axis = dir.Cross(new Vector3(0,-1,0));
 		Tween t = GetTree().CreateTween();
 		t.TweenProperty(_playerCamera, "fov", 120, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
 		t.TweenProperty(_player,"transform", _player.Transform.RotatedLocal(dir.Cross(new Vector3(0,0,0)),Mathf.Pi/2), 1.0f);*/
+		
+		RotateZ(Mathf.Pi/4.0f);
 	}
 	
 	//every physics frame
@@ -127,11 +131,12 @@ public partial class FpsCamera : CharacterBody3D
 				_tripping = false;
 				Tween t = GetTree().CreateTween();
 				t.TweenProperty(_playerCamera, "fov", 75, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
+				RotateZ(-Mathf.Pi/4.0f);
 			}
 		}
 
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
-		Vector3 direction = (_pivot.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		Vector3 direction = (_cameraPivot.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		//float speed = _sprinting ? Speed * SprintMultiplier: Speed;
 		float speed = _tripping? 0:(!IsOnFloor() ? (_sprinting ? 0.4f * SprintMultiplier * Speed :0.45f * Speed ):(_sprinting ? Speed * SprintMultiplier: Speed));
 		if (direction != Vector3.Zero)
