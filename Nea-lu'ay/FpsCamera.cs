@@ -21,12 +21,14 @@ public partial class FpsCamera : CharacterBody3D
 	
 	private Node3D _pivot;
 	private Camera3D _playerCamera;
+	private CollisionShape3D _player;
 	
 	public override void _Ready()
 	{
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		_pivot = GetNode<Node3D>("Pivot");
 		_playerCamera = GetNode<Camera3D>("Pivot/PlayerCamera");
+		_player = GetNode<CollisionShape3D>("CollisionShape3D");
 		_playerCamera.Fov = 85;
 	}
 	
@@ -94,10 +96,15 @@ public partial class FpsCamera : CharacterBody3D
 		}
 	}
 	
-	public void Trip()
+	public void Trip(Vector3 dir)
 	{
 		GD.Print("Trip!");
 		_tripping = true;
+		_sprinting = false;
+		/*Vector3 axis = dir.Cross(new Vector3(0,-1,0));
+		Tween t = GetTree().CreateTween();
+		t.TweenProperty(_playerCamera, "fov", 120, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
+		t.TweenProperty(_player,"transform", _player.Transform.RotatedLocal(dir.Cross(new Vector3(0,0,0)),Mathf.Pi/2), 1.0f);*/
 	}
 	
 	//every physics frame
@@ -115,13 +122,18 @@ public partial class FpsCamera : CharacterBody3D
 		if (Input.IsActionJustPressed("jump") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
+			if(_tripping)
+			{
+				_tripping = false;
+				Tween t = GetTree().CreateTween();
+				t.TweenProperty(_playerCamera, "fov", 75, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
+			}
 		}
 
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (_pivot.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		//float speed = _sprinting ? Speed * SprintMultiplier: Speed;
-		float speed = _tripping? 0:(!IsOnFloor() ? (_sprinting ? 0.4f * SprintMultiplier * Speed :0.4f * Speed ):(_sprinting ? Speed * SprintMultiplier: Speed));
-		//_tripping = _tripping ? false : false;
+		float speed = _tripping? 0:(!IsOnFloor() ? (_sprinting ? 0.4f * SprintMultiplier * Speed :0.45f * Speed ):(_sprinting ? Speed * SprintMultiplier: Speed));
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * speed;
@@ -140,11 +152,11 @@ public partial class FpsCamera : CharacterBody3D
 		for (int i = 0; i < GetSlideCollisionCount(); i++)
 		{
 			var collision = GetSlideCollision(i);
-			if(((Node)collision.GetCollider()).IsInGroup("TripHazard"))
+			if(((Node)collision.GetCollider()).IsInGroup("TripHazard") && !_tripping)
 			{
 				if(_sprinting)
 				{
-					Trip();
+					Trip(direction);
 				}
 				else if(Velocity > new Vector3(0,0,0))
 				{
@@ -152,7 +164,7 @@ public partial class FpsCamera : CharacterBody3D
 					if(tripChance > 0.95)
 					{
 						GD.Print(tripChance+","+Velocity);
-						Trip();
+						Trip(direction);
 					}
 				}
 			}
