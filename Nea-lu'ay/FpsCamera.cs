@@ -15,6 +15,7 @@ public partial class FpsCamera : CharacterBody3D
 	[Export]
 	public float SprintMultiplier = 1.4f;
 	private bool _sprinting = false;
+	private bool _tripping = false;
 	
 	private bool hasController = false;
 	
@@ -96,6 +97,7 @@ public partial class FpsCamera : CharacterBody3D
 	public void Trip()
 	{
 		GD.Print("Trip!");
+		_tripping = true;
 	}
 	
 	//every physics frame
@@ -118,7 +120,8 @@ public partial class FpsCamera : CharacterBody3D
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (_pivot.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		//float speed = _sprinting ? Speed * SprintMultiplier: Speed;
-		float speed = !IsOnFloor() ? 0.5f * Speed: _sprinting ? Speed * SprintMultiplier: Speed;//too punishing if sprinting...
+		float speed = _tripping? 0:(!IsOnFloor() ? (_sprinting ? 0.4f * SprintMultiplier * Speed :0.4f * Speed ):(_sprinting ? Speed * SprintMultiplier: Speed));
+		//_tripping = _tripping ? false : false;
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * speed;
