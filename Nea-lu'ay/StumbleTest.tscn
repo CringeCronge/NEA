@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://wbu7ge6ubeeo"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bdxwu"]
+size = Vector3(2, 0.5, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5np8n"]
+albedo_color = Color(0.290196, 0.74902, 0.270588, 1)
+
+[node name="StumbleHazard" type="CSGMesh3D" groups=["StumbleHazard"]]
+use_collision = true
+collision_mask = 0
+mesh = SubResource("BoxMesh_bdxwu")
+material = SubResource("StandardMaterial3D_5np8n")

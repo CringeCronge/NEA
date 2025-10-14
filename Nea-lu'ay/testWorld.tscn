@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dhka4erttb6np"]
+[gd_scene load_steps=7 format=3 uid="uid://dhka4erttb6np"]
 
 [ext_resource type="PackedScene" uid="uid://dw7olg8uarsl4" path="res://fps_camera.tscn" id="1_2vand"]
 [ext_resource type="PackedScene" uid="uid://doljnpg2irlcj" path="res://TripTest.tscn" id="2_jgpco"]
+[ext_resource type="PackedScene" uid="uid://wbu7ge6ubeeo" path="res://StumbleTest.tscn" id="3_uc0gf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7ppfe"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -64,3 +65,6 @@ floor_max_angle = 1.0472
 
 [node name="test" parent="." instance=ExtResource("2_jgpco")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.8, 0.5, 4.8)
+
+[node name="StumbleHazard" parent="." instance=ExtResource("3_uc0gf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.5, 5)

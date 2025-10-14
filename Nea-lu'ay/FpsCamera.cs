@@ -96,7 +96,7 @@ public partial class FpsCamera : CharacterBody3D
 		}
 	}
 	
-	public void Trip(Vector3 dir)
+	public void Trip()
 	{
 		GD.Print("Trip!");
 		_tripping = true;
@@ -155,7 +155,7 @@ public partial class FpsCamera : CharacterBody3D
 			{
 				if(_sprinting)
 				{
-					Trip(direction);
+					Trip();
 				}
 				else if(Velocity > new Vector3(0,0,0))
 				{
@@ -163,8 +163,20 @@ public partial class FpsCamera : CharacterBody3D
 					if(tripChance > 0.95)
 					{
 						GD.Print(tripChance+","+Velocity);
-						Trip(direction);
+						Trip();
 					}
+				}
+			}
+			else if(((Node)collision.GetCollider()).IsInGroup("StumbleHazard"))
+			{
+				float stumbleChance = GD.Randf();
+				if(_sprinting && stumbleChance >= 0.95)
+				{
+					GD.Print(stumbleChance+", sprinting");
+				}
+				else if(Velocity > new Vector3(0,0,0) && stumbleChance >= 0.99)//the vector may not include negative velocity...
+				{
+					GD.Print(stumbleChance+","+Velocity);
 				}
 			}
 		}
