@@ -37,7 +37,7 @@ public partial class FpsCamera : CharacterBody3D
 	{
 		if(@event is InputEventMouseMotion m)
 		{
-			_cameraPivot.RotateY(-m.Relative.X * CameraSensitivity);
+			/*_cameraPivot.*/RotateY(-m.Relative.X * CameraSensitivity);
 			_playerCamera.RotateX(-m.Relative.Y * CameraSensitivity);
 			
 			Vector3 cameraRotation = _playerCamera.Rotation;
@@ -101,14 +101,8 @@ public partial class FpsCamera : CharacterBody3D
 		GD.Print("Trip!");
 		_tripping = true;
 		_sprinting = false;
-		Velocity = new Vector3(0,3,0);
-		
-		/*Vector3 axis = dir.Cross(new Vector3(0,-1,0));
-		Tween t = GetTree().CreateTween();
-		t.TweenProperty(_playerCamera, "fov", 120, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
-		t.TweenProperty(_player,"transform", _player.Transform.RotatedLocal(dir.Cross(new Vector3(0,0,0)),Mathf.Pi/2), 1.0f);*/
-		
-		RotateZ(Mathf.Pi/4.0f);
+		Velocity += new Vector3(0,3,0);
+		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 	}
 	
 	//every physics frame
@@ -131,7 +125,7 @@ public partial class FpsCamera : CharacterBody3D
 				_tripping = false;
 				Tween t = GetTree().CreateTween();
 				t.TweenProperty(_playerCamera, "fov", 75, 0.2f).SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Cubic);
-				RotateZ(-Mathf.Pi/4.0f);
+				RotateObjectLocal(new Vector3(1, 0, 0), Mathf.Pi/2.0f);
 			}
 		}
 
