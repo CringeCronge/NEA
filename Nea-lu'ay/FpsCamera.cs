@@ -103,6 +103,8 @@ public partial class FpsCamera : CharacterBody3D
 		GD.Print("Trip!");
 		_tripping = true;
 		_sprinting = false;
+		
+		CameraShake(1.0f, 0.1f);
 		Velocity += new Vector3(0,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 	}
@@ -115,11 +117,34 @@ public partial class FpsCamera : CharacterBody3D
 		GD.Print(stumbleQueue[2]-stumbleQueue[0]);
 		
 		eventChance = GD.Randf();
-		if( ((stumbleQueue[2] - stumbleQueue[0]) <= (ulong)30000) && (eventChance >= 0.7f) )
+		if(_tripping && (eventChance >= 0.3f) && ((stumbleQueue[2] - stumbleQueue[0]) <= (ulong)30000) )
 		{
 			Trip();
 			GD.Print("Stumble caused trip!");
 		}
+		else
+		{
+			CameraShake(3.0f, 2.0f);
+		}
+	}
+	
+	public async void CameraShake(float duration, float strength)
+	{
+		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;
+		
+		float countdown = 0.0f; GD.Print("Shaking");
+		while(true)
+		{
+			Vector3 shake = new Vector3((float)GD.RandRange(-strength, strength), (float)GD.RandRange(-strength, strength), 0.0f);
+			cameraShake.Origin += shake;
+			_playerCamera.Transform = cameraShake;
+			
+			countdown += (float)GetProcessDeltaTime();
+			await ToSignal(GetTree(), "process_frame");
+		}
+		
+		
+		await ToSignal(GetTree(), "process_frame"); GD.Print("Done shaking");_playerCamera.Transform = orginalState;
 	}
 	
 	//every physics frame
