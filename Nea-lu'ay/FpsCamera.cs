@@ -128,18 +128,18 @@ public partial class FpsCamera : CharacterBody3D
 		}
 	}
 	
-	public async void CameraShake(float duration, float strength)
+	public async void CameraShake(float duration, float strength)//its a bit violent, and somehow moves you??
 	{
 		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;
 		
 		float countdown = 0.0f; GD.Print("Shaking");
-		while(true)
+		while(countdown<duration)
 		{
 			Vector3 shake = new Vector3((float)GD.RandRange(-strength, strength), (float)GD.RandRange(-strength, strength), 0.0f);
 			cameraShake.Origin += shake;
 			_playerCamera.Transform = cameraShake;
 			
-			countdown += (float)GetProcessDeltaTime();
+			countdown += Mathf.Abs((float)GetProcessDeltaTime()); GD.Print(duration-countdown+"s(?) left");
 			await ToSignal(GetTree(), "process_frame");
 		}
 		
