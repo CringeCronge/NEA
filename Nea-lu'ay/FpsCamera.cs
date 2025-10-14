@@ -16,6 +16,8 @@ public partial class FpsCamera : CharacterBody3D
 	public float SprintMultiplier = 1.4f;
 	private bool _sprinting = false;
 	private bool _tripping = false;
+	public float eventChance = 0.0f;
+	Godot.Collections.Array<ulong> stumbleQueue = [0, 0, 0,];
 	
 	private bool hasController = false;
 	
@@ -84,7 +86,7 @@ public partial class FpsCamera : CharacterBody3D
 //On every frame update, currently right joystick movement.
 	public override void _Process(double delta)
 	{
-		if(hasController)
+		if(hasController)//this might break tripping...
 		{
 			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
 			_cameraPivot.RotateY(-inputDir.X * 0.01f);
@@ -103,6 +105,21 @@ public partial class FpsCamera : CharacterBody3D
 		_sprinting = false;
 		Velocity += new Vector3(0,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
+	}
+	
+	public void Stumble()
+	{
+		stumbleQueue.RemoveAt(0);
+		stumbleQueue.Resize(3);// why does't append work??
+		stumbleQueue[2] = Time.GetTicksMsec();
+		GD.Print(stumbleQueue[2]-stumbleQueue[0]);
+		
+		eventChance = GD.Randf();
+		if( ((stumbleQueue[2] - stumbleQueue[0]) <= (ulong)30000) && (eventChance >= 0.7f) )
+		{
+			Trip();
+			GD.Print("Stumble caused trip!");
+		}
 	}
 	
 	//every physics frame
@@ -157,26 +174,28 @@ public partial class FpsCamera : CharacterBody3D
 				{
 					Trip();
 				}
-				else if(Velocity > new Vector3(0,0,0))
+				else if(Velocity != new Vector3(0,0,0))
 				{
-					float tripChance = GD.Randf();
-					if(tripChance > 0.95)
+					eventChance = GD.Randf();
+					if(eventChance > 0.95)
 					{
-						GD.Print(tripChance+","+Velocity);
+						GD.Print(eventChance+","+Velocity);
 						Trip();
 					}
 				}
 			}
 			else if(((Node)collision.GetCollider()).IsInGroup("StumbleHazard"))
 			{
-				float stumbleChance = GD.Randf();
-				if(_sprinting && stumbleChance >= 0.95)
+				eventChance = GD.Randf();
+				if(_sprinting && eventChance >= 0.97)
 				{
-					GD.Print(stumbleChance+", sprinting");
+					GD.Print(eventChance+", sprinting");
+					Stumble();
 				}
-				else if(Velocity > new Vector3(0,0,0) && stumbleChance >= 0.99)//the vector may not include negative velocity...
+				else if(Velocity != new Vector3(0,0,0) && eventChance >= 0.99)//the vector may not include negative velocity...
 				{
-					GD.Print(stumbleChance+","+Velocity);
+					GD.Print(eventChance+","+Velocity);
+					Stumble();
 				}
 			}
 		}
