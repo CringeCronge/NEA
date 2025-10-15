@@ -102,7 +102,7 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(0.5f, 0.01f, 0.0f);
+		CameraShake(0.5f, 0.01f, 0.01f);
 		Velocity += new Vector3(0,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 	}
@@ -126,18 +126,12 @@ public partial class FpsCamera : CharacterBody3D
 		}
 	}
 	
-	public async void CameraShake(float duration, float strengthX, float strengthY)//its a bit violent, and somehow moves you??
+	public async void CameraShake(float duration, float strengthX, float strengthY)//its a bit violent, use values less than 1?
 	{
-		Transform3D orginalState = _playerCamera.Transform/*, cameraShake = _playerCamera.Transform*/;
+		Transform3D orginalState = _playerCamera.Transform;// just incase
 		
-		//float countdown = 0.0f; GD.Print("Shaking");
-		//while(countdown<duration)
 		for (float countdown = 0.0f; countdown < duration; countdown += (float)GetProcessDeltaTime())
 		{
-			/*Vector3 shake = new Vector3((float)GD.RandRange(-strength, strength), (float)GD.RandRange(-strength, strength), 0.0f);
-			cameraShake.Origin += shake;
-			_playerCamera.Transform = cameraShake;*/
-			
 			_playerCamera.RotateY((float)GD.RandRange(-strengthX, strengthX));
 			_playerCamera.RotateX((float)GD.RandRange(-strengthY, strengthY));
 			
@@ -146,13 +140,10 @@ public partial class FpsCamera : CharacterBody3D
 			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
 			_playerCamera.Rotation = cameraRotation;
 			
-			//countdown += (float)GetProcessDeltaTime();
-			GD.Print(duration-countdown+"s(?) left");
 			await ToSignal(GetTree(), "process_frame");
 		}
 
 		_playerCamera.Transform = orginalState;
-		GD.Print("Done shaking");
 	}
 	
 	//every physics frame
