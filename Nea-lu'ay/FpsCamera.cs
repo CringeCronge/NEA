@@ -104,7 +104,7 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(1.0f, 0.1f);
+		CameraShake(0.5f, 0.01f);
 		Velocity += new Vector3(0,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 	}
@@ -124,7 +124,7 @@ public partial class FpsCamera : CharacterBody3D
 		}
 		else
 		{
-			CameraShake(3.0f, 2.0f);
+			CameraShake(0.2f, 0.01f);
 		}
 	}
 	
@@ -142,9 +142,9 @@ public partial class FpsCamera : CharacterBody3D
 			countdown += Mathf.Abs((float)GetProcessDeltaTime()); GD.Print(duration-countdown+"s(?) left");
 			await ToSignal(GetTree(), "process_frame");
 		}
-		
-		
-		await ToSignal(GetTree(), "process_frame"); GD.Print("Done shaking");_playerCamera.Transform = orginalState;
+
+		_playerCamera.Transform = orginalState;
+		GD.Print("Done shaking");
 	}
 	
 	//every physics frame
