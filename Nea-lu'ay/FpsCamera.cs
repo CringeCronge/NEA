@@ -89,12 +89,10 @@ public partial class FpsCamera : CharacterBody3D
 		if(hasController)//this might break tripping...
 		{
 			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
-			_cameraPivot.RotateY(-inputDir.X * 0.01f);
+			/*_cameraPivot.*/RotateY(-inputDir.X * 0.01f);
 			/*_playerCamera.*/RotateX(-inputDir.Y * 0.01f);
 			
-			Vector3 cameraRotation = _playerCamera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
-			_playerCamera.Rotation = cameraRotation;
+			
 		}
 	}
 	
@@ -104,7 +102,7 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(0.5f, 0.01f);
+		CameraShake(0.5f, 0.01f, 0.0f);
 		Velocity += new Vector3(0,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 	}
@@ -124,22 +122,32 @@ public partial class FpsCamera : CharacterBody3D
 		}
 		else
 		{
-			CameraShake(0.2f, 0.01f);
+			CameraShake(0.2f, 0.01f, 0.01f);
 		}
 	}
 	
-	public async void CameraShake(float duration, float strength)//its a bit violent, and somehow moves you??
+	public async void CameraShake(float duration, float strengthX, float strengthY)//its a bit violent, and somehow moves you??
 	{
-		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;
+		Transform3D orginalState = _playerCamera.Transform/*, cameraShake = _playerCamera.Transform*/;
 		
-		float countdown = 0.0f; GD.Print("Shaking");
-		while(countdown<duration)
+		//float countdown = 0.0f; GD.Print("Shaking");
+		//while(countdown<duration)
+		for (float countdown = 0.0f; countdown < duration; countdown += (float)GetProcessDeltaTime())
 		{
-			Vector3 shake = new Vector3((float)GD.RandRange(-strength, strength), (float)GD.RandRange(-strength, strength), 0.0f);
+			/*Vector3 shake = new Vector3((float)GD.RandRange(-strength, strength), (float)GD.RandRange(-strength, strength), 0.0f);
 			cameraShake.Origin += shake;
-			_playerCamera.Transform = cameraShake;
+			_playerCamera.Transform = cameraShake;*/
 			
-			countdown += Mathf.Abs((float)GetProcessDeltaTime()); GD.Print(duration-countdown+"s(?) left");
+			_playerCamera.RotateY((float)GD.RandRange(-strengthX, strengthX));
+			_playerCamera.RotateX((float)GD.RandRange(-strengthY, strengthY));
+			
+			//Just in case
+			Vector3 cameraRotation = _playerCamera.Rotation;
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
+			_playerCamera.Rotation = cameraRotation;
+			
+			//countdown += (float)GetProcessDeltaTime();
+			GD.Print(duration-countdown+"s(?) left");
 			await ToSignal(GetTree(), "process_frame");
 		}
 
