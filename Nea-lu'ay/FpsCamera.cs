@@ -25,6 +25,8 @@ public partial class FpsCamera : CharacterBody3D
 	private Camera3D _playerCamera;
 	private CollisionShape3D _player;
 	
+	//erm?
+	
 	public override void _Ready()
 	{
 		Input.MouseMode = Input.MouseModeEnum.Captured;
