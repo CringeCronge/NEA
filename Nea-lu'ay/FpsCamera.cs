@@ -129,7 +129,7 @@ public partial class FpsCamera : CharacterBody3D
 	
 	public async void CameraShake(ulong duration, float strengthX, float strengthY)//slightly less violent!
 	{
-		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;// just incase
+		Transform3D originalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;// just incase
 		
 		ulong countdown = 0, startTime = Time.GetTicksMsec();
 		
@@ -156,7 +156,7 @@ public partial class FpsCamera : CharacterBody3D
 		}
 
 		GD.Print("Stable");
-		_playerCamera.Transform = orginalState;
+		_playerCamera.Transform = originalState;
 	}
 	
 	//every physics frame
