@@ -89,12 +89,10 @@ public partial class FpsCamera : CharacterBody3D
 		if(hasController)//this might break tripping...
 		{
 			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
-			_cameraPivot.RotateY(-inputDir.X * 0.01f);
+			/*_cameraPivot.*/RotateY(-inputDir.X * 0.01f);
 			/*_playerCamera.*/RotateX(-inputDir.Y * 0.01f);
 			
-			Vector3 cameraRotation = _playerCamera.Rotation;
-			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
-			_playerCamera.Rotation = cameraRotation;
+			
 		}
 	}
 	
@@ -104,9 +102,10 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(0.5f, 0.01f);
-		Velocity += new Vector3(0,3,0);
+		CameraShake(500, 0.01f, 0.10f); //"_", acts as the digit seprator in Godot - like ","
+		Velocity += new Vector3(3,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
+		//_playerCamera.RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f)
 	}
 	
 	public void Stumble()
@@ -124,27 +123,40 @@ public partial class FpsCamera : CharacterBody3D
 		}
 		else
 		{
-			CameraShake(0.2f, 0.01f);
+			CameraShake(200, 0.02f, 0.01f);
 		}
 	}
 	
-	public async void CameraShake(float duration, float strength)//its a bit violent, and somehow moves you??
+	public async void CameraShake(ulong duration, float strengthX, float strengthY)//slightly less violent!
 	{
-		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;
+		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;// just incase
 		
-		float countdown = 0.0f; GD.Print("Shaking");
-		while(countdown<duration)
+		ulong countdown = 0, startTime = Time.GetTicksMsec();
+		
+		while(countdown < duration)
 		{
-			Vector3 shake = new Vector3((float)GD.RandRange(-strength, strength), (float)GD.RandRange(-strength, strength), 0.0f);
+			GD.Print("Shaking");
+			
+			//vector transforms
+			Vector3 shake = new Vector3((float)GD.RandRange(-strengthX, strengthX), (float)GD.RandRange(-strengthY, strengthY), 0.0f);
 			cameraShake.Origin += shake;
 			_playerCamera.Transform = cameraShake;
 			
-			countdown += Mathf.Abs((float)GetProcessDeltaTime()); GD.Print(duration-countdown+"s(?) left");
-			await ToSignal(GetTree(), "process_frame");
+			//rotation transmforms, may add an argument that can toggle this?
+			/*_playerCamera.RotateY((float)GD.RandRange(-strengthX, strengthX));
+			_playerCamera.RotateX((float)GD.RandRange(-strengthY, strengthY));*/
+			
+			//Just in case
+			Vector3 cameraRotation = _playerCamera.Rotation;
+			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
+			_playerCamera.Rotation = cameraRotation;
+			
+			countdown += Time.GetTicksMsec() - startTime;
+			await ToSignal(GetTree().CreateTimer(0.05), "timeout");//psueodo Thread.Sleep();, plus you could make this an argument as well
 		}
 
+		GD.Print("Stable");
 		_playerCamera.Transform = orginalState;
-		GD.Print("Done shaking");
 	}
 	
 	//every physics frame
@@ -159,7 +171,7 @@ public partial class FpsCamera : CharacterBody3D
 			velocity += GetGravity() * (float)delta * 1.3f;// fine tune gravity.
 		}
 
-		if (Input.IsActionJustPressed("jump") && IsOnFloor())
+		if (Input.IsActionPressed("jump") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
 			if(_tripping)
