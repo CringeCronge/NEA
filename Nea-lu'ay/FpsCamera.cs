@@ -102,8 +102,8 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(500, 0.01f, 0.05f); //"_", acts as the digit seprator in Godot - like ","
-		Velocity += new Vector3(0,3,0);
+		CameraShake(500, 0.01f, 0.10f); //"_", acts as the digit seprator in Godot - like ","
+		Velocity += new Vector3(3,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 		//_playerCamera.RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f)
 	}
@@ -171,7 +171,7 @@ public partial class FpsCamera : CharacterBody3D
 			velocity += GetGravity() * (float)delta * 1.3f;// fine tune gravity.
 		}
 
-		if (Input.IsActionJustPressed("jump") && IsOnFloor())
+		if (Input.IsActionPressed("jump") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
 			if(_tripping)
