@@ -102,7 +102,7 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(15_000, 0.01f, 0.01f); //"_", acts as the digit seprator in Godot - like ","
+		CameraShake(500, 0.01f, 0.05f); //"_", acts as the digit seprator in Godot - like ","
 		Velocity += new Vector3(0,3,0);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 		//_playerCamera.RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f)
@@ -123,38 +123,36 @@ public partial class FpsCamera : CharacterBody3D
 		}
 		else
 		{
-			CameraShake(200, 0.01f, 0.01f);
+			CameraShake(200, 0.02f, 0.01f);
 		}
 	}
 	
-	public async void CameraShake(ulong duration, float strengthX, float strengthY)//its a bit violent, use values less than 1?
+	public async void CameraShake(ulong duration, float strengthX, float strengthY)//slightly less violent!
 	{
 		Transform3D orginalState = _playerCamera.Transform, cameraShake = _playerCamera.Transform;// just incase
 		
 		ulong countdown = 0, startTime = Time.GetTicksMsec();
-		//duration = duration * (ulong)Mathf.Pow((double)10, (double)3);
 		
 		while(countdown < duration)
 		{
 			GD.Print("Shaking");
+			
 			//vector transforms
 			Vector3 shake = new Vector3((float)GD.RandRange(-strengthX, strengthX), (float)GD.RandRange(-strengthY, strengthY), 0.0f);
 			cameraShake.Origin += shake;
 			_playerCamera.Transform = cameraShake;
 			
-			//rotation transmforms
-			_playerCamera.RotateY((float)GD.RandRange(-strengthX, strengthX));
-			_playerCamera.RotateX((float)GD.RandRange(-strengthY, strengthY));
+			//rotation transmforms, may add an argument that can toggle this?
+			/*_playerCamera.RotateY((float)GD.RandRange(-strengthX, strengthX));
+			_playerCamera.RotateX((float)GD.RandRange(-strengthY, strengthY));*/
 			
 			//Just in case
 			Vector3 cameraRotation = _playerCamera.Rotation;
 			cameraRotation.X = Mathf.Clamp(cameraRotation.X, -((4.0f * Mathf.Pi)/9.0f), ((4.0f * Mathf.Pi)/9.0f));
 			_playerCamera.Rotation = cameraRotation;
 			
-			countdown += (ulong)Time.GetTicksMsec() - startTime;
-			GD.Print(startTime + ", " +countdown);
-			GD.Print(Time.GetTicksMsec() + ", " + (ulong)Time.GetTicksMsec());
-			await ToSignal(GetTree().CreateTimer(0.01), "timeout");//psueodo Thread.Sleep();
+			countdown += Time.GetTicksMsec() - startTime;
+			await ToSignal(GetTree().CreateTimer(0.05), "timeout");//psueodo Thread.Sleep();, plus you could make this an argument as well
 		}
 
 		GD.Print("Stable");
