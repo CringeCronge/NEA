@@ -25,8 +25,6 @@ public partial class FpsCamera : CharacterBody3D
 	private Camera3D _playerCamera;
 	private CollisionShape3D _player;
 	
-	//erm?
-	
 	public override void _Ready()
 	{
 		Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -88,13 +86,11 @@ public partial class FpsCamera : CharacterBody3D
 //On every frame update, currently right joystick movement.
 	public override void _Process(double delta)
 	{
-		if(hasController)//this might break tripping...
+		if(hasController)
 		{
 			Vector2 inputDir = Input.GetVector("look_left", "look_right", "look_up", "look_down");
-			/*_cameraPivot.*/RotateY(-inputDir.X * 0.01f);
-			/*_playerCamera.*/RotateX(-inputDir.Y * 0.01f);
-			
-			
+			/*_cameraPivot.*/RotateY(-inputDir.X * 0.03f);
+			_playerCamera.RotateX(-inputDir.Y * 0.03f);
 		}
 	}
 	
@@ -104,8 +100,13 @@ public partial class FpsCamera : CharacterBody3D
 		_tripping = true;
 		_sprinting = false;
 		
-		CameraShake(500, 0.01f, 0.10f); //"_", acts as the digit seprator in Godot - like ","
 		Velocity += new Vector3(3,3,0);
+		
+		//Quaterons for camera
+		/*var initialTranform = Quaternion(_playerCamera.Transform.Basis);
+		var finalTransform = Quaternion();*/
+		
+		CameraShake(500, 0.01f, 0.10f); //"_", acts as the digit seprator in Godot - like ","
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 		//_playerCamera.RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f)
 	}
@@ -118,7 +119,8 @@ public partial class FpsCamera : CharacterBody3D
 		GD.Print(stumbleQueue[2]-stumbleQueue[0]);
 		
 		eventChance = GD.Randf();
-		if(_tripping && (eventChance >= 0.3f) && ((stumbleQueue[2] - stumbleQueue[0]) <= (ulong)30000) )
+		//"_", acts as the digit seprator in Godot - like ","
+		if(_tripping && (eventChance >= 0.3f) && ((stumbleQueue[2] - stumbleQueue[0]) <= (ulong)30_000) )
 		{
 			Trip();
 			GD.Print("Stumble caused trip!");
@@ -137,8 +139,6 @@ public partial class FpsCamera : CharacterBody3D
 		
 		while(countdown < duration)
 		{
-			GD.Print("Shaking");
-			
 			//vector transforms
 			Vector3 shake = new Vector3((float)GD.RandRange(-strengthX, strengthX), (float)GD.RandRange(-strengthY, strengthY), 0.0f);
 			cameraShake.Origin += shake;
@@ -204,12 +204,14 @@ public partial class FpsCamera : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+		//is there a better way to do this?
+		//maybe new Vector3(0,0,0) could be as a value?
 		for (int i = 0; i < GetSlideCollisionCount(); i++)
 		{
 			var collision = GetSlideCollision(i);
 			if(((Node)collision.GetCollider()).IsInGroup("TripHazard") && !_tripping)
 			{
-				if(_sprinting)
+				if(_sprinting && Velocity != new Vector3(0,0,0))
 				{
 					Trip();
 				}
@@ -226,7 +228,7 @@ public partial class FpsCamera : CharacterBody3D
 			else if(((Node)collision.GetCollider()).IsInGroup("StumbleHazard"))
 			{
 				eventChance = GD.Randf();
-				if(_sprinting && eventChance >= 0.97)
+				if(_sprinting && Velocity != new Vector3(0,0,0) && eventChance >= 0.97)
 				{
 					GD.Print(eventChance+", sprinting");
 					Stumble();
