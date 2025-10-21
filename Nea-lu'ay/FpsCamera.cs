@@ -205,17 +205,17 @@ public partial class FpsCamera : CharacterBody3D
 		Velocity = velocity;
 		MoveAndSlide();
 		//is there a better way to do this?
-		//maybe new Vector3(0,0,0) could be as a value?
+		//is Vector3.Zero any better than new Vector3(0,0,0)?
 		for (int i = 0; i < GetSlideCollisionCount(); i++)
 		{
 			var collision = GetSlideCollision(i);
 			if(((Node)collision.GetCollider()).IsInGroup("TripHazard") && !_tripping)
 			{
-				if(_sprinting && Velocity != new Vector3(0,0,0))
+				if(_sprinting && Velocity != Vector3.Zero)
 				{
 					Trip();
 				}
-				else if(Velocity != new Vector3(0,0,0))
+				else if(Velocity != Vector3.Zero)
 				{
 					eventChance = GD.Randf();
 					if(eventChance > 0.95)
@@ -228,12 +228,12 @@ public partial class FpsCamera : CharacterBody3D
 			else if(((Node)collision.GetCollider()).IsInGroup("StumbleHazard"))
 			{
 				eventChance = GD.Randf();
-				if(_sprinting && Velocity != new Vector3(0,0,0) && eventChance >= 0.97)
+				if(_sprinting && Velocity != Vector3.Zero && eventChance >= 0.97)
 				{
 					GD.Print(eventChance+", sprinting");
 					Stumble();
 				}
-				else if(Velocity != new Vector3(0,0,0) && eventChance >= 0.99)//the vector may not include negative velocity...
+				else if(Velocity != Vector3.Zero && eventChance >= 0.99)
 				{
 					GD.Print(eventChance+","+Velocity);
 					Stumble();
