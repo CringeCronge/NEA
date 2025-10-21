@@ -102,13 +102,9 @@ public partial class FpsCamera : CharacterBody3D
 		
 		Velocity += new Vector3(3,3,0);
 		
-		//Quaterons for camera
-		/*var initialTranform = Quaternion(_playerCamera.Transform.Basis);
-		var finalTransform = Quaternion();*/
-		
-		CameraShake(500, 0.01f, 0.10f); //"_", acts as the digit seprator in Godot - like ","
+		CameraShake(500, 0.01f, 0.10f);
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
-		//_playerCamera.RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f)
+		//find a way, some day, to rotate the camera as well.
 	}
 	
 	public void Stumble()
