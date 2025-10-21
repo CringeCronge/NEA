@@ -114,7 +114,7 @@ public partial class FpsCamera : CharacterBody3D
 	public void Stumble()
 	{
 		stumbleQueue.RemoveAt(0);
-		stumbleQueue.Resize(3);// why does't append work??
+		stumbleQueue.Resize(3);//Can not use Append() here due to C# and GDScript differences - so, a Resize() is used.
 		stumbleQueue[2] = Time.GetTicksMsec();
 		GD.Print(stumbleQueue[2]-stumbleQueue[0]);
 		
@@ -187,7 +187,7 @@ public partial class FpsCamera : CharacterBody3D
 
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (_cameraPivot.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-		//float speed = _sprinting ? Speed * SprintMultiplier: Speed;
+
 		float speed = _tripping? 0:(!IsOnFloor() ? (_sprinting ? 0.4f * SprintMultiplier * Speed :0.45f * Speed ):(_sprinting ? Speed * SprintMultiplier: Speed));
 		if (direction != Vector3.Zero)
 		{
