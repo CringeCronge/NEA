@@ -62,6 +62,7 @@ transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 
 size = Vector3(1, 1, 1.5)
 
 [node name="fpsCamera" parent="." instance=ExtResource("1_2vand")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 3.5)
 floor_max_angle = 1.0472
 

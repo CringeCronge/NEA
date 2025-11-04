@@ -102,7 +102,7 @@ public partial class FpsCamera : CharacterBody3D
 		
 		Velocity += new Vector3(3,3,0);
 		
-		CameraShake(500, 0.01f, 0.10f);
+		CameraShake(500, 0.01f, 0.10f);// maybe place this before the function call, so Trip() can be called Stumble() 
 		RotateObjectLocal(new Vector3(1, 0, 0), -Mathf.Pi/2.0f);
 		//find a way, some day, to rotate the camera as well.
 	}
