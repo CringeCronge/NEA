@@ -1,11 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://brqxt03dhno3f"]
+[gd_scene load_steps=3 format=3 uid="uid://brqxt03dhno3f"]
 
 [sub_resource type="TextMesh" id="TextMesh_tkvg8"]
 text = "Erm"
 font_size = 127
 
-[node name="TestEnemy" type="Node3D"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tkvg8"]
+radius = 0.6
+height = 3.0
+
+[node name="TestEnemy" type="CharacterBody3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(-5.24537e-08, -1.2, 0, 1.2, -5.24537e-08, 0, 0, 0, 4.8, 0, 1.4, 0)
 mesh = SubResource("TextMesh_tkvg8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("CapsuleShape3D_tkvg8")
