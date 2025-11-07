@@ -15,6 +15,7 @@ public partial class TestCat : CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		var targetPos = _player.GetGlobalPosition();
+		targetPos.Y = this.GetGlobalPosition().Y; //rotation lock would be better...
 		var targetTransform = this.Transform.LookingAt(targetPos, Vector3.Up);
 		this.Transform = this.Transform.InterpolateWith(targetTransform, 5 * (float)delta);
 		
