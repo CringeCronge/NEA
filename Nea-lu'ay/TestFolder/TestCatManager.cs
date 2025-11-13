@@ -35,7 +35,7 @@ public partial class TestCatManager : Node
 		{
 			Vector3 centerCorrection = Rule1(boidArray[i].GetGlobalPosition(), targetPos);
 			GD.Print(i + " ," + centerCorrection);
-			Vector3 objectAvoidence = Rule2();
+			Vector3 objectAvoidence = Rule2(boidArray[i]);
 			Vector3 velocityCorrection = Rule3();
 		}
 	}
@@ -46,9 +46,19 @@ public partial class TestCatManager : Node
 		return new Vector3 ((targetPos.X-boidPos.X)/100, (targetPos.Y-boidPos.Y)/100, (targetPos.Z-boidPos.Z)/100);
 	}
 	
-	public Vector3 Rule2()
+	public Vector3 Rule2(CharacterBody3D boid)
 	{
-		return Vector3.Zero;
+		Vector3 avoidance = Vector3.Zero;
+		
+		for(int i = 0; i < boidArray.Count; i++)
+		{
+			if(boid != boidArray[i])
+			{
+				avoidance -= boid.GetGlobalPosition() - boidArray[i].GetGlobalPosition();
+			}
+		}
+		
+		return avoidance;
 	}
 	
 	public Vector3 Rule3()
