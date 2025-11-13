@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://dhka4erttb6np"]
+[gd_scene load_steps=10 format=3 uid="uid://dhka4erttb6np"]
 
 [ext_resource type="PackedScene" uid="uid://dw7olg8uarsl4" path="res://fps_camera.tscn" id="1_2vand"]
 [ext_resource type="PackedScene" uid="uid://doljnpg2irlcj" path="res://TestFolder/TripTest.tscn" id="2_jgpco"]
 [ext_resource type="PackedScene" uid="uid://wbu7ge6ubeeo" path="res://TestFolder/StumbleTest.tscn" id="3_uc0gf"]
 [ext_resource type="PackedScene" uid="uid://brqxt03dhno3f" path="res://TestFolder/TestingEnemy.tscn" id="4_y63tp"]
 [ext_resource type="PackedScene" uid="uid://dnn8xpc5kysru" path="res://TestFolder/TestCat.tscn" id="5_c63ps"]
+[ext_resource type="Script" uid="uid://dir1fx1dhk7g4" path="res://TestFolder/TestCatManager.cs" id="5_k3hs0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7ppfe"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -75,5 +76,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.5, 5)
 [node name="TestEnemy" parent="." instance=ExtResource("4_y63tp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 0.5)
 
-[node name="Cat" parent="." instance=ExtResource("5_c63ps")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.6, 0)
+[node name="TestCatManager" type="Node" parent="."]
+script = ExtResource("5_k3hs0")
+
+[node name="Cat1" parent="TestCatManager" instance=ExtResource("5_c63ps")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, 0)
+
+[node name="Cat2" parent="TestCatManager" instance=ExtResource("5_c63ps")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, 1)
+
+[node name="Cat3" parent="TestCatManager" instance=ExtResource("5_c63ps")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -1)

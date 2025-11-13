@@ -17,7 +17,7 @@ public partial class FpsCamera : CharacterBody3D
 	private bool _sprinting = false;
 	private bool _tripping = false;
 	public float eventChance = 0.0f;
-	Godot.Collections.Array<ulong> stumbleQueue = [0, 0, 0,];
+	Godot.Collections.Array<ulong> stumbleQueue = [0, 0, 0];
 	
 	private bool hasController = false;
 	

@@ -14,7 +14,7 @@ font_size = 56
 height = 0.05
 radius = 0.3
 
-[node name="Cat" type="CharacterBody3D"]
+[node name="Cat" type="CharacterBody3D" groups=["Cat"]]
 script = ExtResource("1_ffagq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
