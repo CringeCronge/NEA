@@ -30,14 +30,20 @@ public partial class TestCatManager : Node
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector3 targetPos = targetBoid.GetGlobalPosition();
+		Vector3 targetVelocity = targetBoid.Velocity;
 		
 		for (int i = 0; i < boidArray.Count; i++)
 		{
 			Vector3 centerCorrection = Rule1(boidArray[i].GetGlobalPosition(), targetPos);
-			GD.Print(i + " ," + centerCorrection);
+			GD.Print("Rule 1, Boid:" + i + " ," + centerCorrection);
 			Vector3 objectAvoidence = Rule2(boidArray[i]);
-			Vector3 velocityCorrection = Rule3();
+			GD.Print("Rule 2, Boid:" + i + " ," + objectAvoidence);
+			Vector3 velocityCorrection = Rule3(boidArray[i], targetVelocity);
+			GD.Print("Rule 3, Boid:", i + " ," + velocityCorrection);
 		}
+		
+		/*Velocity = 
+		MoveAndSlide();*/
 	}
 	
 	public Vector3 Rule1(Vector3 boidPos, Vector3 targetPos)
@@ -61,8 +67,18 @@ public partial class TestCatManager : Node
 		return avoidance;
 	}
 	
-	public Vector3 Rule3()
+	public Vector3 Rule3(CharacterBody3D boid, Vector3 targetVelocity)
 	{
-		return Vector3.Zero;
+		Vector3 newVelocity = targetVelocity;
+		
+		for(int i = 0; i < boidArray.Count; i++)
+		{
+			if(boid != boidArray[i])
+			{
+				newVelocity += boidArray[i].Velocity;
+			}
+		}
+		
+		return ((newVelocity/(boidArray.Count-1))-boid.Velocity)/8.0f;
 	}
 }
