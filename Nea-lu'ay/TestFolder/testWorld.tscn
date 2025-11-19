@@ -83,7 +83,7 @@ script = ExtResource("5_k3hs0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, 0)
 
 [node name="Cat2" parent="TestCatManager" instance=ExtResource("5_c63ps")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, 2)
 
 [node name="Cat3" parent="TestCatManager" instance=ExtResource("5_c63ps")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -2)
