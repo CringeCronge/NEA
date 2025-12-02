@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://wbu7ge6ubeeo" path="res://TestFolder/StumbleTest.tscn" id="3_uc0gf"]
 [ext_resource type="PackedScene" uid="uid://brqxt03dhno3f" path="res://TestFolder/TestingEnemy.tscn" id="4_y63tp"]
 [ext_resource type="PackedScene" uid="uid://dnn8xpc5kysru" path="res://TestFolder/TestCat.tscn" id="5_c63ps"]
-[ext_resource type="Script" uid="uid://dir1fx1dhk7g4" path="res://TestFolder/TestCatManager.cs" id="5_k3hs0"]
+[ext_resource type="Script" uid="uid://dir1fx1dhk7g4" path="res://TestFolder/Scripts/TestCatManager.cs" id="5_k3hs0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7ppfe"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)

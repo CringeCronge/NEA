@@ -6,11 +6,14 @@ public partial class TestCat : CharacterBody3D
 	
 	private CharacterBody3D _player;
 	private CharacterBody3D _catBody;
+	private RayCast3D _groundCast;
+
 	private Vector3 velocity;
 		
 	public override void _Ready()
 	{
 		_player = GetNode<CharacterBody3D>("%fpsCamera");
+		//_groundCast = GetNode<RayCast3D>("CollisionShape3D/GroundCast");
 		velocity = Vector3.Zero;
 	}
 	
@@ -21,11 +24,9 @@ public partial class TestCat : CharacterBody3D
 		var targetTransform = this.Transform.LookingAt(targetPos, Vector3.Up);
 		this.Transform = this.Transform.InterpolateWith(targetTransform, 5 * (float)delta);
 		
-		if (!IsOnFloor())
-		{
-			Velocity += GetGravity() * (float)delta * 1.3f;// fine tune gravity.
-		}
 		
+		
+		Velocity += velocity;
 		MoveAndSlide();//this means the manager won't need to move this.
 	}
 }

@@ -15,6 +15,9 @@ height = 0.05
 radius = 0.3
 
 [node name="Cat" type="CharacterBody3D" groups=["Cat"]]
+collision_layer = 2
+collision_mask = 3
+floor_max_angle = 1.0472
 script = ExtResource("1_ffagq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -22,5 +25,22 @@ transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 
 mesh = SubResource("TextMesh_jo1u5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
 shape = SubResource("CylinderShape3D_kguou")
+
+[node name="LeftCast" type="RayCast3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
+target_position = Vector3(0.5, 0, 0)
+
+[node name="RightCast" type="RayCast3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0)
+target_position = Vector3(-0.5, 0, 0)
+
+[node name="FrontCast" type="RayCast3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3)
+target_position = Vector3(0, 0, -1)
+
+[node name="BackCast" type="RayCast3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
+target_position = Vector3(0, 0, 1)
+
+[node name="PlayerCast" type="RayCast3D" parent="CollisionShape3D"]
