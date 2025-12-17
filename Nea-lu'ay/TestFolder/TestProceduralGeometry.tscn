@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bxitwpcw0kame"]
 
-[ext_resource type="Script" uid="uid://ccho23cb522gb" path="res://TestSurfaceTool.cs" id="1_3hll8"]
+[ext_resource type="Script" uid="uid://ccho23cb522gb" path="res://TestFolder/Scripts/TestSurfaceTool.cs" id="1_3hll8"]
 
 [node name="TestSurfaceTool" type="MeshInstance3D"]
 script = ExtResource("1_3hll8")

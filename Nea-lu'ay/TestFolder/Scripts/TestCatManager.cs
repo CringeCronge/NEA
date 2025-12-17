@@ -39,7 +39,7 @@ public partial class TestCatManager : Node
 			Vector3 centerCorrection = Rule1(currentPos, targetPos);
 			//GD.Print("Rule 1, Boid:" + i + " ," + centerCorrection);
 			Vector3 objectAvoidence = Rule2(boidArray[i], currentPos, targetPos);
-			GD.Print("Rule 2, Boid:" + i + " ," + objectAvoidence);
+			//GD.Print("Rule 2, Boid:" + i + " ," + objectAvoidence);
 			Vector3 velocityCorrection = Rule3(boidArray[i], targetVelocity);
 			//GD.Print("Rule 3, Boid:", i + " ," + velocityCorrection);
 			

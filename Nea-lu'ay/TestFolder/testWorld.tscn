@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dhka4erttb6np"]
+[gd_scene load_steps=16 format=3 uid="uid://dhka4erttb6np"]
 
 [ext_resource type="PackedScene" uid="uid://dw7olg8uarsl4" path="res://fps_camera.tscn" id="1_2vand"]
 [ext_resource type="PackedScene" uid="uid://doljnpg2irlcj" path="res://TestFolder/TripTest.tscn" id="2_jgpco"]
@@ -21,6 +21,21 @@ sky = SubResource("Sky_2vand")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_c4bro"]
+load_path = "res://.godot/imported/texture_06.png-ed464c28c3a6c64b8e8c922508290a3a.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_52567"]
+albedo_texture = SubResource("CompressedTexture2D_c4bro")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kv22g"]
+albedo_texture = SubResource("CompressedTexture2D_c4bro")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v3eim"]
+albedo_texture = SubResource("CompressedTexture2D_c4bro")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bg2jp"]
+albedo_texture = SubResource("CompressedTexture2D_c4bro")
+
 [node name="Node3D" type="Node3D"]
 
 [node name="GodotGraphics" type="Node" parent="."]
@@ -37,6 +52,7 @@ shadow_enabled = true
 [node name="Floor" type="CSGBox3D" parent="."]
 use_collision = true
 size = Vector3(16, 1, 16)
+material = SubResource("StandardMaterial3D_52567")
 
 [node name="Test Area" type="CSGCombiner3D" parent="."]
 use_collision = true
@@ -45,10 +61,12 @@ collision_mask = 0
 [node name="CSGBox3D" type="CSGBox3D" parent="Test Area"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1.5)
 size = Vector3(4, 2, 1)
+material = SubResource("StandardMaterial3D_kv22g")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="Test Area"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.5, 1.5, 1)
 size = Vector3(4, 2, 1)
+material = SubResource("StandardMaterial3D_v3eim")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="Test Area/CSGBox3D2"]
 transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, -1, -4.37114e-08, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 0, 0, 0)
@@ -58,10 +76,12 @@ radius = 0.7
 [node name="CSGBox3D3" type="CSGBox3D" parent="Test Area"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.2, 1, 1)
 size = Vector3(4, 1, 1)
+material = SubResource("StandardMaterial3D_bg2jp")
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="Test Area"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 2.2, 0.623223, 3.17678)
 size = Vector3(1, 1, 1.5)
+material = SubResource("StandardMaterial3D_bg2jp")
 
 [node name="fpsCamera" parent="." instance=ExtResource("1_2vand")]
 unique_name_in_owner = true
@@ -90,4 +110,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, 2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -2)
 
 [node name="TestSurfaceTool" parent="." instance=ExtResource("7_c4bro")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
