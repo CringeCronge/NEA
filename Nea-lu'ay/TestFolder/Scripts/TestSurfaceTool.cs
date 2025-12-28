@@ -13,7 +13,7 @@ public partial class TestSurfaceTool : MeshInstance3D
 	public override void _Ready()
 	{
 		
-		Vector3[] vertices =
+		/*Vector3[] vertices =
 		[
 			new Vector3(-1, 0, 1),
 			new Vector3(-1, 0, -1),
@@ -52,32 +52,35 @@ public partial class TestSurfaceTool : MeshInstance3D
 		
 		// Create the Mesh.
 		arrMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays);
-		this.Mesh = arrMesh;
+		this.Mesh = arrMesh;*/
 
 		//Other way of doing this
 		Godot.Collections.Array surfaceArray = [];
 		surfaceArray.Resize((int)Mesh.ArrayType.Max);
 
 		List<Vector3> vertcies = [];
-		List<Vector2> uvs = [];
 		List<Vector3> normals = [];
+		List<Vector2> uvs = [];
 		List<int> indices = [];
 		
 		//Mesh and Grpah gen
 		Vector3[] bounds =
 		{
-			new Vector3(-10, 0, -10),
-			new Vector3(-10, 0, 10),
-			new Vector3(10, 0, -10),
-			new Vector3(10, 0, 10)
+			new Vector3(-5, 0, -5),
+			new Vector3(-5, 0, 5),
+			new Vector3(5, 0, -5),
+			new Vector3(5, 0, 5)
 		};
+		float boundLength = Mathf.Abs(bounds[0].X-bounds[1].X) > 0 ? Mathf.Abs(bounds[0].X-bounds[1].X) :Mathf.Abs(bounds[0].Z-bounds[1].Z);
 		
 		Vector3[] tempGrid = [];
 		
 		//for this to work, 0 must be the smallest corner and 3 being the largest
-		for(float i = bounds[0].X; i < bounds[3].X; i++)
+		float unitLength = 0.5f;
+		
+		for(float i = bounds[0].X; i < bounds[3].X; i += unitLength)
 		{
-			for(float j = bounds[0].Z; j < bounds[3].Z; j++)
+			for(float j = bounds[0].Z; j < bounds[3].Z; j += unitLength)
 			{
 				tempGrid.Append(new Vector3(i, 0, j));
 			}
@@ -101,9 +104,34 @@ public partial class TestSurfaceTool : MeshInstance3D
 		}
 		
 		//creating a mesh for surface tool
+		float sliceLenght = boundLength/unitLength;
+		int vertexCount = 0;
 		for(int i = 0; i < tempGrid.Length; i++)
 		{
-			//get a corner and make a Vector3[] of 2 triangles
+			vertcies.Add(tempGrid[i]);
+			vertcies.Add(tempGrid[i + 1]);
+			vertcies.Add(tempGrid[i + 1 + (int)sliceLenght]);
+			vertcies.Add(tempGrid[i + (int)sliceLenght]);
+			vertcies.Add(tempGrid[i + 1 + (int)sliceLenght]);
+			vertcies.Add(tempGrid[i + 1]);
+
+			normals.Add(tempGrid[i].Normalized());
+			normals.Add(tempGrid[i + 1].Normalized());
+			normals.Add(tempGrid[i + 1 +(int)sliceLenght].Normalized());
+			normals.Add(tempGrid[i + (int)sliceLenght].Normalized());
+			normals.Add(tempGrid[i + 1].Normalized());
+			normals.Add(tempGrid[i + 1].Normalized());
+
+			//UV calcs? "hairy ball theorom"
+
+			indices.Add(vertexCount);
+			indices.Add(vertexCount + 1);
+			indices.Add(vertexCount + 2);
+			indices.Add(vertexCount + 3);
+			indices.Add(vertexCount + 4);
+			indices.Add(vertexCount + 5);
+			indices.Add(vertexCount + 6);
+			vertexCount += 7;
 		}
 
 		//generate triangle grid from square?
@@ -116,7 +144,7 @@ public partial class TestSurfaceTool : MeshInstance3D
 		var arrayMesh = Mesh as ArrayMesh;
 		if (arrayMesh != null)
 		{
-			arrMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
+			arrayMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
 		}
 
 	}
