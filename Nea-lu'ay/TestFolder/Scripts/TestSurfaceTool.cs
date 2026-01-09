@@ -1,4 +1,5 @@
 using Godot;
+using Godot.NativeInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,7 @@ public partial class TestSurfaceTool : MeshInstance3D
 		List<Vector2> uvs = [];
 		List<int> indices = [];
 		
-		//Mesh and Grpah gen
+		//Mesh and Graph gen
 		Vector3[] bounds =
 		{
 			new Vector3(-5, 0, -5),
@@ -71,32 +72,43 @@ public partial class TestSurfaceTool : MeshInstance3D
 			new Vector3(5, 0, -5),
 			new Vector3(5, 0, 5)
 		};
+		//Length of the square, might redo to acomodate rectangles.
 		float boundLength = Mathf.Abs(bounds[0].X-bounds[1].X) > 0 ? Mathf.Abs(bounds[0].X-bounds[1].X) :Mathf.Abs(bounds[0].Z-bounds[1].Z);
 		
-		Vector3[] tempGrid = [];
+		//Vector3[] tempGrid = [];
 		
 		//for this to work, 0 must be the smallest corner and 3 being the largest
 		float unitLength = 0.5f;
+		Godot.Collections.Array<Vector3> tempGrid = [];
+		tempGrid.Resize((int)(6*Mathf.Pow(boundLength/unitLength, 2.0f))); //I do not trust this, as it is dependent on squares.
+		
+		int tempCounter = 0;//rename to currentIndex?
 		
 		for(float i = bounds[0].X; i < bounds[3].X; i += unitLength)
 		{
 			for(float j = bounds[0].Z; j < bounds[3].Z; j += unitLength)
 			{
-				tempGrid.Append(new Vector3(i, 0, j));
+				tempCounter++;
+				tempGrid[tempCounter]=(new Vector3(i, 0, j));
+				//GD.Print(tempGrid[tempCounter], " ", new Vector3(i, 0, j));
+				//erm.Add(new Vector3(i, 0, j));
 			}
 		}
+		GD.Print((int)(6*Mathf.Pow(boundLength/unitLength, 2.0f)),", ",tempCounter+1);//2400, 401???
+		tempGrid.Resize(tempCounter+1);//this is because I do not trust myself.
 		
 		//creating graph
-		for(int i = 0; i < tempGrid.Length; i++)
+		///TODO: Prove this works
+		for(int i = 0; i < tempGrid.Count; i++)
 		{
 			Vector3[] edges = [];
-			for (int j = 0; j < tempGrid.Length; j++)
+			for (int j = 0; j < tempGrid.Count; j++)
 			{
 				if(!Graph.ContainsKey(tempGrid[i]))
 				{
 					if ((Mathf.Sqrt(Mathf.Pow((tempGrid[i].X-tempGrid[j].X), 2)+Mathf.Pow((tempGrid[i].Z-tempGrid[j].Z), 2)) <= 2.0f))
 					{
-						edges.Append(tempGrid[j]);
+						edges.Append(tempGrid[j]); //GD.Print(tempGrid[j]);
 					}
 				}
 			}
@@ -106,25 +118,44 @@ public partial class TestSurfaceTool : MeshInstance3D
 		//creating a mesh for surface tool
 		float sliceLenght = boundLength/unitLength;
 		int vertexCount = 0;
-		for(int i = 0; i < tempGrid.Length; i++)
+		for(int i = 0; i < tempGrid.Count; i++)
 		{
-			vertcies.Add(tempGrid[i]);
-			vertcies.Add(tempGrid[i + 1]);
-			vertcies.Add(tempGrid[i + 1 + (int)sliceLenght]);
-			vertcies.Add(tempGrid[i + (int)sliceLenght]);
-			vertcies.Add(tempGrid[i + 1 + (int)sliceLenght]);
-			vertcies.Add(tempGrid[i + 1]);
-
-			normals.Add(tempGrid[i].Normalized());
-			normals.Add(tempGrid[i + 1].Normalized());
-			normals.Add(tempGrid[i + 1 +(int)sliceLenght].Normalized());
-			normals.Add(tempGrid[i + (int)sliceLenght].Normalized());
-			normals.Add(tempGrid[i + 1].Normalized());
-			normals.Add(tempGrid[i + 1].Normalized());
-
-			//UV calcs? "hairy ball theorom"
-
-			indices.Add(vertexCount);
+			//Array of each point required to make two trinagles that create a square
+			Godot.Collections.Array<Vector3> tempPoints =
+			[
+				tempGrid[i],
+				tempGrid[i + 1],
+				tempGrid[i + 1 + (int)sliceLenght],
+				tempGrid[i + (int)sliceLenght],
+				tempGrid[i + 1 + (int)sliceLenght],
+				tempGrid[i + 1]
+			];
+			
+			vertcies.Add(tempPoints[0]);
+			vertcies.Add(tempPoints[1]);
+			vertcies.Add(tempPoints[2]);
+			vertcies.Add(tempPoints[3]);
+			vertcies.Add(tempPoints[4]);
+			vertcies.Add(tempPoints[5]);
+			
+			normals.Add(tempPoints[0].Normalized());
+			normals.Add(tempPoints[1].Normalized());
+			normals.Add(tempPoints[2].Normalized());
+			normals.Add(tempPoints[3].Normalized());
+			normals.Add(tempPoints[4].Normalized());
+			normals.Add(tempPoints[5].Normalized());
+			
+			//UV calculations. Should I hardcode the number of loops?
+			for(int j = 0; j < tempPoints.Count; j++)
+			{
+				Vector3 tempPoint = tempPoints[j]; GD.Print(i,", ",j,", ",tempPoints[j]);
+				Vector3 U3D = new Vector3(tempPoint.Y, -tempPoint.X, tempPoint.Z);
+				Vector3 V3D = tempPoint.Cross(U3D);
+				
+				uvs.Add(new Vector2(U3D.Dot(Vector3.Zero), V3D.Dot(Vector3.Zero)));
+			}
+			
+			indices.Add(vertexCount + 0);//I wonder how many clock cycles I lose here.
 			indices.Add(vertexCount + 1);
 			indices.Add(vertexCount + 2);
 			indices.Add(vertexCount + 3);
@@ -133,9 +164,8 @@ public partial class TestSurfaceTool : MeshInstance3D
 			indices.Add(vertexCount + 6);
 			vertexCount += 7;
 		}
-
+		
 		//generate triangle grid from square?
-
 		surfaceArray[(int)Mesh.ArrayType.Vertex] = vertcies.ToArray();
 		surfaceArray[(int)Mesh.ArrayType.TexUV] = uvs.ToArray();
 		surfaceArray[(int)Mesh.ArrayType.Normal] = normals.ToArray();
