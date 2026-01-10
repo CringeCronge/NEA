@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dhka4erttb6np"]
+[gd_scene load_steps=17 format=3 uid="uid://dhka4erttb6np"]
 
 [ext_resource type="PackedScene" uid="uid://dw7olg8uarsl4" path="res://fps_camera.tscn" id="1_2vand"]
 [ext_resource type="PackedScene" uid="uid://doljnpg2irlcj" path="res://TestFolder/TripTest.tscn" id="2_jgpco"]
@@ -26,15 +26,21 @@ load_path = "res://.godot/imported/texture_06.png-ed464c28c3a6c64b8e8c922508290a
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_52567"]
 albedo_texture = SubResource("CompressedTexture2D_c4bro")
+uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kv22g"]
 albedo_texture = SubResource("CompressedTexture2D_c4bro")
+uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v3eim"]
 albedo_texture = SubResource("CompressedTexture2D_c4bro")
+uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bg2jp"]
 albedo_texture = SubResource("CompressedTexture2D_c4bro")
+uv1_triplanar = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_c4bro"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -111,3 +117,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -2)
 
 [node name="TestSurfaceTool" parent="." instance=ExtResource("7_c4bro")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.5)
+mesh = SubResource("ArrayMesh_c4bro")
